@@ -1,0 +1,5 @@
+# Handle client-side routing
+/*    /index.html   200
+
+# API routes should go to backend
+/api/*  https://your-backend-url/api/:splat  200
