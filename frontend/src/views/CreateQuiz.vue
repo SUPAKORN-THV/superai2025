@@ -631,7 +631,8 @@ const saveQuiz = async () => {
   try {
     const quizData = {
       ...quizConfig.value,
-      questions: questions.value
+      questions: questions.value,
+      ...(chatSessionId.value && { chatSessionId: chatSessionId.value })
     }
     
     console.log('💾 Saving quiz:', quizData)
@@ -681,8 +682,31 @@ const createChatSession = async () => {
 
 const handleQuizGenerated = (generatedQuestions) => {
   console.log('🎉 Received generated questions:', generatedQuestions.length)
-  questions.value = [...questions.value, ...generatedQuestions]
+  
+  // Preserve original format and ensure all question types are included
+  const processedQuestions = generatedQuestions.map(q => ({
+    ...q,
+    // Ensure code questions have proper template
+    ...(q.type === 'code' && !q.codeTemplate && {
+      codeTemplate: getCodeTemplate(quizConfig.value.language)
+    })
+  }))
+  
+  questions.value = [...questions.value, ...processedQuestions]
   activeTab.value = 'preview'
+}
+
+const getCodeTemplate = (language) => {
+  const templates = {
+    javascript: '// Write your JavaScript code here\nfunction solution() {\n    // Your code here\n    return result;\n}',
+    python: '# Write your Python code here\ndef solution():\n    # Your code here\n    return result',
+    java: '// Write your Java code here\npublic class Solution {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}',
+    cpp: '// Write your C++ code here\n#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}',
+    html: '<!-- Write your HTML code here -->\n<!DOCTYPE html>\n<html>\n<head>\n    <title>Solution</title>\n</head>\n<body>\n    <!-- Your code here -->\n</body>\n</html>',
+    css: '/* Write your CSS code here */\n.solution {\n    /* Your styles here */\n}',
+    sql: '-- Write your SQL query here\nSELECT * FROM table_name\nWHERE condition;'
+  }
+  return templates[language] || '// Write your code here'
 }
 
 const handleContentExtracted = (context) => {
@@ -693,6 +717,14 @@ const handleContentExtracted = (context) => {
 onMounted(() => {
   // Test AI connection when component mounts
   testAIConnection()
+  
+  // Check if returning to existing chat session
+  const chatSessionParam = router.currentRoute.value.query.chatSession
+  if (chatSessionParam) {
+    chatSessionId.value = chatSessionParam
+    showAIChat.value = true
+    activeTab.value = 'ai'
+  }
 })
 </script>
 

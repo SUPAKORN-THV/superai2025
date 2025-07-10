@@ -226,10 +226,9 @@ router.post("/sessions/:id/generate-quiz", auth, async (req, res) => {
     let contentForQuiz = session.context.extractedContent || ''
     
     if (!contentForQuiz) {
-      // Use chat conversation as content
+      // Use both user and assistant messages to preserve full context
       contentForQuiz = session.messages
-        .filter(msg => msg.role === 'user')
-        .map(msg => msg.content)
+        .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
         .join('\n\n')
       
       if (!contentForQuiz || contentForQuiz.length < 50) {
@@ -255,9 +254,10 @@ router.post("/sessions/:id/generate-quiz", auth, async (req, res) => {
     const detectedLanguage = detectLanguage(contentForQuiz)
     
     // Override options to preserve detected language
+    let finalOptions = options || {}
     if (detectedLanguage !== 'en') {
-      options = {
-        ...options,
+      finalOptions = {
+        ...finalOptions,
         responseLanguage: detectedLanguage
       }
     }
@@ -266,7 +266,7 @@ router.post("/sessions/:id/generate-quiz", auth, async (req, res) => {
     console.log(`📄 Content length: ${contentForQuiz.length} characters`)
     console.log(`🌐 Detected language: ${detectedLanguage}`)
 
-    const questions = await aiChatService.generateQuizFromContent(contentForQuiz, options)
+    const questions = await aiChatService.generateQuizFromContent(contentForQuiz, finalOptions)
 
     console.log(`✅ Generated ${questions.length} questions from chat content`)
 
@@ -278,7 +278,7 @@ router.post("/sessions/:id/generate-quiz", auth, async (req, res) => {
         sessionId: session._id,
         contentLength: contentForQuiz.length,
         generatedAt: new Date().toISOString(),
-        ...options,
+        ...finalOptions,
       },
     })
   } catch (error) {

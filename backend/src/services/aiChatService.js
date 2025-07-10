@@ -89,13 +89,13 @@ Guidelines:
     console.log(`🎯 Generating ${questionCount} questions from content (${content.length} chars)`)
 
     const languageInstruction = options.responseLanguage && options.responseLanguage !== 'en' 
-      ? `\n\nIMPORTANT: Generate all questions, options, and explanations in the same language as the provided content. Do not translate to English.`
+      ? `\n\nCRITICAL: Generate ALL content (questions, options, explanations, code) in the EXACT SAME LANGUAGE as the provided content. Do NOT translate anything to English. Preserve the original language completely.`
       : ''
 
     const prompt = `Based on the following content, generate ${questionCount} quiz questions about ${topic} in ${language} programming language at ${difficulty} level.
 
 Content:
-${content.substring(0, 3000)}
+${content.substring(0, 4000)}
 
 Question types to include: ${questionTypes.join(", ")}
 
@@ -108,14 +108,16 @@ Return a JSON array with this EXACT structure (no additional text or formatting)
     "correctAnswer": "Option 1",
     "explanation": "Detailed explanation based on the provided content",
     "difficulty": "${difficulty}",
-    "points": 1
+    "points": 1,
+    "codeTemplate": "// For code questions only\n#include <iostream>\nint main() {\n    // Your code here\n    return 0;\n}"
   }
 ]
 
 Requirements:
 - Base questions directly on the provided content
-- Make questions practical and educational
-- Include clear explanations
+- Preserve the EXACT language and terminology from the original content
+- For code questions, include codeTemplate with proper language syntax
+- Include clear explanations in the same language as content
 - Ensure options are realistic and challenging
 - Use ${difficulty} appropriate complexity
 - Return ONLY the JSON array, no other text${languageInstruction}`

@@ -41,12 +41,26 @@
           </span>
         </div>
         
-        <button
-          @click="startQuiz"
-          class="mt-8 bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition duration-300"
-        >
-          Start Quiz
-        </button>
+        <div class="mt-8 space-y-4">
+          <button
+            @click="startQuiz"
+            class="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition duration-300"
+          >
+            Start Quiz
+          </button>
+          
+          <div v-if="quiz.chatSessionId" class="flex justify-center">
+            <button
+              @click="continueChatSession"
+              class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300 flex items-center space-x-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              <span>Continue Chat Session</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -423,6 +437,12 @@ const submitQuiz = async () => {
   } catch (error) {
     console.error('Failed to submit quiz:', error)
     alert('Failed to submit quiz. Please try again.')
+  }
+}
+
+const continueChatSession = () => {
+  if (quiz.value.chatSessionId) {
+    router.push(`/create-quiz?chatSession=${quiz.value.chatSessionId}`)
   }
 }
 

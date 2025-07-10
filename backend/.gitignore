@@ -1,0 +1,7 @@
+node_modules/
+.env
+uploads/
+ssl/*.pem
+ssl/*.key
+ssl/*.crt
+*.log

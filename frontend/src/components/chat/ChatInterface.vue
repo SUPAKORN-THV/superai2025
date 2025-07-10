@@ -147,10 +147,12 @@
             v-model="newMessage"
             @keydown.enter.exact.prevent="sendMessage"
             @keydown.enter.shift.exact="newMessage += '\n'"
+            @input="autoResize"
+            ref="messageInput"
             placeholder="Type your message... (Shift+Enter for new line)"
             rows="1"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-            style="min-height: 40px; max-height: 120px;"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none overflow-hidden"
+            style="min-height: 40px; max-height: 120px; line-height: 1.5;"
           ></textarea>
         </div>
         
@@ -211,6 +213,7 @@ const sending = ref(false)
 const generatingQuiz = ref(false)
 const dragOver = ref(false)
 const messagesContainer = ref(null)
+const messageInput = ref(null)
 
 const canSendMessage = computed(() => {
   return (newMessage.value.trim() || selectedFiles.value.length > 0) && !sending.value
@@ -290,9 +293,14 @@ const sendMessage = async () => {
     // Clear inputs
     newMessage.value = ''
     selectedFiles.value = []
+    
+    // Reset textarea height
+    await nextTick()
+    if (messageInput.value) {
+      messageInput.value.style.height = '40px'
+    }
 
     // Scroll to bottom
-    await nextTick()
     scrollToBottom()
 
     console.log('✅ Message sent successfully')
@@ -347,6 +355,13 @@ const clearChat = () => {
 const scrollToBottom = () => {
   if (messagesContainer.value) {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+  }
+}
+
+const autoResize = () => {
+  if (messageInput.value) {
+    messageInput.value.style.height = '40px'
+    messageInput.value.style.height = Math.min(messageInput.value.scrollHeight, 120) + 'px'
   }
 }
 

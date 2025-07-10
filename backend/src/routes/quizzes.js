@@ -35,7 +35,9 @@ router.get("/", auth, async (req, res) => {
 // Get quiz by ID
 router.get("/:id", auth, async (req, res) => {
   try {
-    const quiz = await Quiz.findById(req.params.id).populate("createdBy", "username")
+    const quiz = await Quiz.findById(req.params.id)
+      .populate("createdBy", "username")
+      .populate("chatSessionId")
 
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" })
@@ -54,7 +56,8 @@ router.get("/:id", auth, async (req, res) => {
         codeTemplate: q.codeTemplate,
       })),
       // Keep createdBy for button visibility
-      createdBy: quiz.createdBy
+      createdBy: quiz.createdBy,
+      chatSessionId: quiz.chatSessionId
     }
 
     res.json(quizForTaking)
@@ -67,7 +70,9 @@ router.get("/:id", auth, async (req, res) => {
 // Get full quiz details for editing
 router.get("/:id/edit", auth, async (req, res) => {
   try {
-    const quiz = await Quiz.findById(req.params.id).populate("createdBy", "username")
+    const quiz = await Quiz.findById(req.params.id)
+      .populate("createdBy", "username")
+      .populate("chatSessionId")
 
     if (!quiz) {
       return res.status(404).json({ message: "Quiz not found" })
