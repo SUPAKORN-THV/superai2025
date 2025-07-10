@@ -50,7 +50,7 @@
       
       <div class="border-t border-gray-800 mt-8 pt-8 text-center">
         <p class="text-gray-300 mb-2">
-          © 2024 Mahidol University. All rights reserved.
+          © 2025 Mahidol University. All rights reserved.
         </p>
         <p class="text-gray-400 text-sm">
           Developed by Mahidol University
