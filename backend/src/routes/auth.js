@@ -10,6 +10,8 @@ const router = express.Router()
 router.post(
   "/register",
   [
+    body("firstName").isLength({ min: 2 }).trim(),
+    body("lastName").isLength({ min: 2 }).trim(),
     body("username").isLength({ min: 3 }).trim(),
     body("email").isEmail().normalizeEmail(),
     body("password").isLength({ min: 6 }),
@@ -21,7 +23,7 @@ router.post(
         return res.status(400).json({ errors: errors.array() })
       }
 
-      const { username, email, password } = req.body
+      const { firstName, lastName, username, email, password } = req.body
 
       // Check if user exists
       const existingUser = await User.findOne({
@@ -35,7 +37,7 @@ router.post(
       }
 
       // Create user
-      const user = new User({ username, email, password })
+      const user = new User({ firstName, lastName, username, email, password })
       await user.save()
 
       // Generate JWT
@@ -46,6 +48,8 @@ router.post(
         token,
         user: {
           id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
           username: user.username,
           email: user.email,
           role: user.role,
@@ -88,6 +92,8 @@ router.post("/login", [body("email").isEmail().normalizeEmail(), body("password"
       token,
       user: {
         id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         username: user.username,
         email: user.email,
         role: user.role,

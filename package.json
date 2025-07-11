@@ -6,7 +6,8 @@
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "npm run dev --prefix backend",
-    "init": "npm install concurrently --save-dev"
+    "init": "npm install concurrently --save-dev",
+    "start:docker": "concurrently \"cd backend && NODE_ENV=production npm start\" \"cd frontend && npm run preview -- --host 0.0.0.0 --port 5173\""
   },
   "devDependencies": {
     "concurrently": "^9.2.0"

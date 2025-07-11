@@ -39,7 +39,7 @@ A comprehensive, intelligent quiz application that leverages cutting-edge AI to 
 ### Backend
 - **Node.js** with Express.js
 - **MongoDB** with Mongoose ODM
-- **Google Gemini 1.5-Flash** for AI generation
+- **Google Gemini 2.5-Flash** for AI generation
 - **VM2** for secure code execution
 - **JWT** authentication with bcrypt
 - **Multer** for file uploads
@@ -60,10 +60,10 @@ A comprehensive, intelligent quiz application that leverages cutting-edge AI to 
 ### Quick Start
 ```bash
 # Clone repository
-git clone https://github.com/mahidol-university/practice-ai.git
+https://github.com/SUPAKORN-THV/superai2025.git
 cd practice-ai
 
-# Install dependencies for both frontend and backend
+# Install dependencies for concurrent process
 npm run init
 
 # Start development servers
@@ -87,6 +87,10 @@ GEMINI_API_KEY=your-gemini-api-key-here
 FRONTEND_URL=http://localhost:5173
 PORT=3001
 NODE_ENV=development
+SSL_ENABLED=false
+SSL_CERT_PATH=./ssl/certificate.pem
+SSL_KEY_PATH=./ssl/private-key.pem
+PUBLIC_URL=https://your-domain.com
 ```
 
 #### Frontend Configuration
@@ -99,6 +103,19 @@ cp .env.example .env
 #### Frontend Environment (.env)
 ```env
 VITE_API_URL=http://localhost:3001
+```
+#### Docker Creation
+```bash
+docker build -t practice-ai:latest . 
+docker save -o practice-ai.docker practice-ai:latest
+```
+#### Docker Loader
+```bash
+docker load -i practice-ai.docker
+```
+#### Docker Run
+```bash
+docker run -p 5173:5173 -p 3001:3001 --env-file .env practice-ai:latest
 ```
 
 ## 🎯 Core Features
@@ -392,33 +409,18 @@ Ensure all environment variables are properly set in your deployment platform:
 - Resource usage monitoring
 - AI service performance
 
-## 🤝 Contributing
-
-### Development Setup
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow coding standards and add tests
-4. Commit changes (`git commit -m 'Add amazing feature'`)
-5. Push to branch (`git push origin feature/amazing-feature`)
-6. Open Pull Request
-
-### Coding Standards
-- **ESLint**: JavaScript/Vue.js linting
-- **Prettier**: Code formatting
-- **Conventional Commits**: Commit message format
-- **Test Coverage**: Minimum 80% coverage
-
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is non-licensed.
 
 ## 🏛️ About
 
-**Practice-AI** is developed by **Mahidol University** as an innovative educational platform that combines artificial intelligence with interactive learning to enhance programming education.
+**Practice-AI** is developed by **Mahidol University** for Super AI Engineer Season 5 - Track AI Innovator
+**Permission** to edit OR re-publish this repository is up to the development team.
 
 ### Development Team
 - **Institution**: Mahidol University
-- **Copyright**: © 2024 Mahidol University. All rights reserved.
+- **Copyright**: © 2025 Mahidol University. All rights reserved.
 - **Contact**: For support and inquiries, please contact the development team
 
 ### Acknowledgments
@@ -427,26 +429,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - MongoDB for reliable data storage
 - Vercel for seamless deployment platform
 - All contributors and beta testers
-
-## 🔮 Roadmap & Future Enhancements
-
-### Short-term Goals
-- [ ] Real-time collaborative quiz creation
-- [ ] Advanced code execution environments (Docker containers)
-- [ ] Mobile application (React Native/Flutter)
-- [ ] Offline quiz taking capabilities
-
-### Medium-term Goals
-- [ ] Gamification features (badges, leaderboards, achievements)
-- [ ] Social learning features (study groups, peer reviews)
-- [ ] Advanced analytics dashboard with ML insights
-- [ ] Integration with popular IDEs and learning platforms
-
-### Long-term Vision
-- [ ] Multi-modal AI (voice, image, video) integration
-- [ ] Personalized learning paths with AI tutoring
-- [ ] Enterprise features for educational institutions
-- [ ] Open-source community contributions and plugins
 
 ---
 
